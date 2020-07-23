@@ -30,6 +30,16 @@ if [[ ${GIT_CLONE_BASE} == 'null' ]]; then
   exit
 fi
 
+if [[ ! -d ${GIT_CLONE_BASE} ]]; then
+  printf "Creating ${GIT_CLONE_BASE}\n"
+  mkdir -p ${GIT_CLONE_BASE}
+  if [[ ! -d ${GIT_CLONE_BASE} ]]; then
+    printf "Unable to create ${GIT_CLONE_BASE}  Exiting. \n"
+    exit
+  fi  
+fi
+
+
 NUM_PROCS=$(jq -r '.buildsystem.num_procs' ${CONFIG_FILE})
 if [[ ${NUM_PROCS} == 'null' ]]; then
   NUM_PROCS=4
@@ -155,18 +165,19 @@ for curr_package in ${rank_sorted_package_list[@]}; do
   GIT_REF='master'
   GIT_SYMLINK_ALIAS='master'
   # Are ANY of them set?
-  if [[ ! -z ${CURR_GIT_COMMIT} ]] || [[ ! -z ${CURR_GIT_BRANCH} ]] || [[ ! -z ${CURR_GIT_TAG} ]]; then
+  if [[ ${CURR_GIT_COMMIT} != 'null' ]] || [[ ${CURR_GIT_BRANCH} != 'null' ]] || [[ ${CURR_GIT_TAG} != 'null' ]]; then
     # Only one can be used... if more than one is set, it will get used on a first come basis..
-    if [[ ! -z ${CURR_GIT_COMMIT} ]]; then
+    if [[ ${CURR_GIT_COMMIT} != 'null' ]]; then
         GIT_REF=${CURR_GIT_COMMIT}
-    elif [[ ! -z ${CURR_GIT_BRANCH} ]]; then
+    elif [[ ${CURR_GIT_BRANCH} != 'null' ]]; then
         GIT_REF=${CURR_GIT_BRANCH}
-    elif [[ ! -z ${CURR_GIT_TAG} ]]; then
+    elif [[ ${CURR_GIT_TAG} != 'null' ]]; then
         GIT_REF=${CURR_GIT_TAG}
     fi
-    printf "commit: ${CURR_GIT_COMMIT}\n"
-    printf "branch: ${CURR_GIT_BRANCH}\n"
-    printf "tag: ${CURR_GIT_TAG}\n"
+
+#    printf "commit: ${CURR_GIT_COMMIT}\n"
+#    printf "branch: ${CURR_GIT_BRANCH}\n"
+#    printf "tag: ${CURR_GIT_TAG}\n"
     printf "ref: ${GIT_REF}\n"
   fi
 

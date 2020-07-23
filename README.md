@@ -36,18 +36,10 @@ Use each library's build system to build, and develop the correct inputs/outputs
 
 determine what the build order is, and make it extensible to modify order of builds for dependencies.
 
-TODO: 
-= generalize/consolidate buildsys.json ... 
-= create pre/post commands ... 
-= create named version directories to allow multiple builds ... 
-= accept config file argument from script ... 
-= implement remaining options... 
-= cleanup structure... push to github ... 
-= implement "uninstall" option to delete files from install base or wipe out and start over.
-= pin libs to versions
 
 
-Buildsys.json key/value options:
+
+# Buildsys.json key/value options:
 * package
 * rank
 * debug_install_base
