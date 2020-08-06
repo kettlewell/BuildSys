@@ -1,6 +1,7 @@
 
 
 project( openblas )
+include(enter)
 
 include(ProcessorCount)
 set(NPROCS 4)
@@ -9,8 +10,8 @@ if (${_NPROCS})
   set ( NPROCS ${_NPROCS} )
 endif()
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-include(debuglog)
+#list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+#include(debuglog)
 
 include(ExternalProject)
 
@@ -32,8 +33,8 @@ ExternalProject_Add(${EP_openblas}
     WORKING_DIRECTORY <SOURCE_DIR>
 )
 
-include(debuglog)
-
+#include(debuglog)
+include(exit)
 # TODO: create uninstall lists for non-cmake systems.
 
 #$ pwd

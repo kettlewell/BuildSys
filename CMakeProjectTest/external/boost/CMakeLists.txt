@@ -20,8 +20,8 @@
 #project( boost VERSION 1.73.0 LANGUAGES NONE )
 project( boost LANGUAGES NONE )
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-
+#list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+include(enter)
 
 set(BUILD_BITS 64 CACHE STRING "Build for 64 (default) or 32 bit.")
 
@@ -133,4 +133,4 @@ target_compile_definitions(boost_asio INTERFACE
 
 
 #  include(debuglog)
-
+include(exit)

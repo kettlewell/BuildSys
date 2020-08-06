@@ -1,11 +1,20 @@
 # ------------------------- Begin Generic CMake Variable Logging ------------------
 
 # /*    C++ comment style not allowed   */
+if(DEBUG_OUTPUT)
 
 MESSAGE( STATUS " ##  ---- "  )
 
 MESSAGE( STATUS " ## CMAKE_PROJECT_NAME:                " ${CMAKE_PROJECT_NAME} )
 MESSAGE( STATUS " ## PROJECT_NAME:                      " ${PROJECT_NAME} )
+
+
+message( STATUS " ## CONFIG_BUILD_TYPE:                 " ${CONFIG_BUILD_TYPE})
+message( STATUS " ## INSTALL_BASE:                      " ${INSTALL_BASE} )
+message( STATUS " ## CMAKE_FIND_ROOT_PATH:              " ${CMAKE_FIND_ROOT_PATH})
+message( STATUS " ## CMAKE_INSTALL_PREFIX:              " ${CMAKE_INSTALL_PREFIX})
+message( STATUS " ## CMAKE_BUILD_TYPE:                  " ${CMAKE_BUILD_TYPE})
+message( STATUS " ## CMAKE_VERBOSE_MAKEFILE:            " ${CMAKE_VERBOSE_MAKEFILE})
 
 # if you are building in-source, this is the same as CMAKE_SOURCE_DIR, otherwise
 # this is the top level directory of your build tree
@@ -170,10 +179,13 @@ MESSAGE( STATUS " ## openblas_SOURCE_DIR:               " ${openblas_SOURCE_DIR}
 MESSAGE( STATUS " ## openblas_BINARY_DIR:               " ${openblas_BINARY_DIR} )
 endif()
 
+
+
 MESSAGE( STATUS " ##  ---- "  )
 
 
 #MESSAGE( STATUS " ## : " ${} )
 
 
+endif()
 # ------------------------- End of Generic CMake Variable Logging ------------------

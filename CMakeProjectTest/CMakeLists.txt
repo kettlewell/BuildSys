@@ -1,15 +1,13 @@
 # Top Level CMAKE File
 cmake_minimum_required(VERSION 3.14)
 
-project(subprojects)
+project(buildsys)
 
 # TODO: 
 #       remove policy deprecation warnings
 #       enhance messages... still unclear on a few items.
 #       create entrance and exit messages
 
-# Why does this work here, and not below... or does it... ?
-set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Add the project cmake path
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -18,42 +16,22 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 # TODO: make use of these functions
 #include(installcmakepp)
 
+# TODO: Cleanup this variable mess ... 
+set(CONFIG_BUILD_TYPE        "Release"              CACHE STRING "CONFIG_BUILD_TYPE"    )
+set(INSTALL_BASE             "/data/opt"            CACHE PATH "INSTALL BASE"         )
+set(CMAKE_FIND_ROOT_PATH     "${INSTALL_BASE}"       )
+set(CMAKE_INSTALL_PREFIX     "${INSTALL_BASE}"       )
+set(CMAKE_BUILD_TYPE         "${CONFIG_BUILD_TYPE}"  )
+set(CMAKE_VERBOSE_MAKEFILE   OFF                    CACHE BOOL "CMAKE_VERBOSE_MAKEFILE")
+set(DEBUG_OUTPUT             OFF                    CACHE BOOL "Enable Disable Debug output")
 
-# TODO:  used? Not in the top level ... 
-# Parallelize build if possible
-#include(ProcessorCount)
-#ProcessorCount(NJOBS)
-#if(NJOBS EQUAL 0)
-#  set(NJOBS 2)
-#endif()
+set(BUILD_RAPIDJSON          OFF                    CACHE BOOL "BUILD_RAPIDJSON")
+set(BUILD_FASTCPPCSVPARSER   OFF                    CACHE BOOL "BUILD_FASTCPPCSVPARSER")
+set(BUILD_LAPACK             OFF                    CACHE BOOL "BUILD_LAPACK")
+set(BUILD_BOOST              OFF                    CACHE BOOL "BUILD_BOOST")
+set(BUILD_OPENBLAS           OFF                    CACHE BOOL "BUILD_OPENBLAS")
 
-
-set(CONFIG_BUILD_TYPE "Release" CACHE PATH "CONFIG_BUILD_TYPE" FORCE)
-set(INSTALL_BASE "/data/opt" CACHE PATH "INSTALL BASE" FORCE)
-set(CMAKE_FIND_ROOT_PATH ${INSTALL_BASE} CACHE PATH "CMAKE_FIND_ROOT_PATH" FORCE)
-set(CMAKE_INSTALL_PREFIX ${INSTALL_BASE} CACHE PATH "CMAKE_INSTALL_PREFIX" FORCE)
-set(CMAKE_BUILD_TYPE ${CONFIG_BUILD_TYPE} CACHE PATH "CMAKE_BUILD_TYPE" FORCE)
-
-# Why does this not work here, but does up above ?
-set(CMAKE_VERBOSE_MAKEFILE:BOOL=ON)
-set(CMAKE_RULE_MESSAGES:BOOL=ON)
-
-#set (CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install CACHE PATH "Cmake prefix" FORCE) 
-## Add a custom CMake Modules directory
-#set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
-#set(CMAKE_MODULE_PATH /data/opt/cmake/modules ${CMAKE_MODULE_PATH})
-# Set a default build type if none was specified
-set(default_build_type "Release")
-
-
-
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
-  set(CMAKE_BUILD_TYPE ${default_build_type} CACHE STRING "Choose the type of build." FORCE)
-  # Set the possible values of build type for cmake-gui
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-endif()
-
+include(debuglog)
 
 # Globally Set Compiler Options for c++11
 include(CheckCXXCompilerFlag)
@@ -71,119 +49,277 @@ endif()
 
 include(FetchAndPopulate)
 
-FetchAndPopulate(
-    rapidjson
-    https://github.com/Tencent/rapidjson
-    master
-)
-FetchAndPopulate(
-    lapack
-    https://github.com/Reference-LAPACK/lapack.git
-    v3.9.0
-)
 
-FetchAndPopulate(
-    boost
-    /data/git/boost.git
-    boost-1.73.0
-)
-
-FetchAndPopulate(
-    openblas
-    /data/git/OpenBLAS.git
-    develop
-)
-
-# Needs to be set in dependency order
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/rapidjson)
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/boost)
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/openblas)
-add_subdirectory(${CMAKE_SOURCE_DIR}/external/lapack)
+# Force Set Dependencies
+if(BUILD_OPENBLAS)
+    set(BUILD_BOOST ON)
+endif()
 
 
+if(BUILD_RAPIDJSON)
 
-# Fetch Contents
-#include(FetchContent)
+    FetchAndPopulate(
+        rapidjson
+        /data/git/rapidjson.git
+        master
+    )
+endif()
 
+if(BUILD_LAPACK)
 
-# Rapid JSON
-#FetchContent_Declare(
-#    rapidjson
-#    GIT_REPOSITORY https://github.com/Tencent/rapidjson
-#    GIT_TAG master
-#)
-#FetchContent_GetProperties(rapidjson)
-#if(NOT rapidjson_POPULATED)
-#    FetchContent_Populate(rapidjson)
-#endif()
+    FetchAndPopulate(
+        lapack
+        /data/git/lapack.git
+        v3.9.0
+    )
+endif()
 
-#BOOST.Build
-#FetchContent_Declare(
-#    boostbuild
-#    GIT_REPOSITORY https://github.com/boostorg/build.git
-#    GIT_TAG develop
-#)
-#FetchContent_GetProperties(boostbuild)
-#if(NOT boostbuild_POPULATED)
-#    FetchContent_Populate(boostbuild)
-#endif()
+if(BUILD_BOOST)
+    FetchAndPopulate(
+        boost
+        /data/git/boost.git
+        boost-1.73.0
+    )
+endif()
 
-#BOOST
-#FetchContent_Declare(
-#    boost_git
-#    #GIT_REPOSITORY https://github.com/boostorg/boost.git
-#    GIT_REPOSITORY /data/git/boost
-#    GIT_TAG boost-1.73.0
-#    GIT_CONFIG jobs=10
-#)
-#FetchContent_GetProperties(boost_git)
-#if(NOT boost_git_POPULATED)
-#    FetchContent_Populate(boost_git)
-#endif()
+if(BUILD_OPENBLAS)
+    FetchAndPopulate(
+        openblas
+        /data/git/OpenBLAS.git
+        develop
+    )
+endif()
 
+if(BUILD_FASTCPPCSVPARSER)
+    FetchAndPopulate(
+        fastcppcsvparser
+        /data/git/fastcppcsvparser.git
+        master
+    )
+endif()
 
-###lapack
-#FetchContent_Declare(
-#    lapack_git
-#    GIT_REPOSITORY https://github.com/Reference-LAPACK/lapack.git
-#    GIT_TAG v3.9.0
-#)
-#FetchContent_GetProperties(lapack_git)
-#if(NOT lapack_git_POPULATED)
-#    FetchContent_Populate(lapack_git)
-#endif()
+if(BOOGYMAN)
+    FetchAndPopulate(
+        mp
+        /data/git/mp.git
+        master
+    )
+    FetchAndPopulate(
+        armadillo
+        /data/git/armadillo.git
+        9.900.x
+    )
 
-
-include(debuglog)
-
-
-## External Projects
-#include(ExternalProject)
-
-# RapidJSON
-#set(EP_rapidjson "rapidjson")
-#ExternalProject_Add(${EP_rapidjson}
-#    PREFIX ${EP_rapidjson}
-#    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-#    SOURCE_DIR ${${EP_rapidjson}_SOURCE_DIR}  # Provided by FetchContent
-#    CMAKE_CACHE_DEFAULT_ARGS
-#        -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-#        -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
-#        -DRAPIDJSON_BUILD_DOC:BOOL=OFF
-#        -DRAPIDJSON_BUILD_EXAMPLES:BOOL=OFF
-#        -DRAPIDJSON_BUILD_TESTS:BOOL=OFF
-#        -DRAPIDJSON_BUILD_THIRDPARTY_GTEST:BOOL=OFF
-#        -DRAPIDJSON_BUILD_CXX11:BOOL=ON
-#        -DRAPIDJSON_BUILD_ASAN:BOOL=OFF
-#        -DRAPIDJSON_BUILD_UBSAN:BOOL=OFF
-#        -DRAPIDJSON_ENABLE_INSTRUMENTATION_OPT:BOOL=ON
-#        -DRAPIDJSON_HAS_STDSTRING:BOOL=OFF
-#    DEPENDS boost
-#)
+    FetchAndPopulate(
+        openmpi
+        /data/git/openmpi.git
+        master
+    )
+    FetchAndPopulate(
+        blaze
+        /data/git/blaze.git
+        master
+    )
+    FetchAndPopulate(
+        dataframe
+        /data/git/dataframe.git
+        master
+    )
 
 
+    FetchAndPopulate(
+        dlib
+        /data/git/dlib.git
+        master
+    )
+
+    FetchAndPopulate(
+        eigen
+        /data/git/eigen.git
+        3.3.7
+    )
+
+    FetchAndPopulate(
+        ceres
+        /data/git/ceres.git
+        master
+    )
+
+    FetchAndPopulate(
+        ensmallen
+        /data/git/ensmallen.git
+        master
+    )
+    FetchAndPopulate(
+        gsl
+        /data/git/gsl.git
+        master
+    )
+    FetchAndPopulate(
+        metatoolkit
+        /data/git/metatoolkit.git
+        master
+    )
+    FetchAndPopulate(
+        mlpack
+        /data/git/mlpack.git
+        master
+    )
+    FetchAndPopulate(
+        nlohmannjson
+        /data/git/nlohmannjson.git
+        master
+    )
+    FetchAndPopulate(
+        nlopt
+        /data/git/nlopt.git
+        master
+    )
+
+    FetchAndPopulate(
+        rcpp
+        /data/git/rcpp.git
+        master
+    )
+    FetchAndPopulate(
+        rinside
+        /data/git/rinside.git
+        master
+    )
+    FetchAndPopulate(
+        shark
+        /data/git/shark.git
+        master
+    )
+    FetchAndPopulate(
+        shogun
+        /data/git/shogun.git
+        master
+    )
+    FetchAndPopulate(
+        universal
+        /data/git/universal.git
+        master
+    )
+    FetchAndPopulate(
+        vc
+        /data/git/vc.git
+        master
+    )
+
+    FetchAndPopulate(
+        vowpalwabbit
+        /data/git/vowpalwabbit.git
+        master
+    )
+
+    FetchAndPopulate(
+        xtensor
+        /data/git/xtensor.git
+        master
+    )
+
+    FetchAndPopulate(
+        root
+        /data/git/root.git
+        master
+    )
+    FetchAndPopulate(
+        cpphttplib
+        /data/git/cpphttplib.git
+        master
+    )
+    FetchAndPopulate(
+        neoml
+        /data/git/neoml.git
+        master
+    )
+    FetchAndPopulate(
+        xgboost
+        /data/git/xgboost.git
+        master
+    )
+    FetchAndPopulate(
+        glog
+        /data/git/glog.git
+        master
+    )
+    FetchAndPopulate(
+        abseilcpp
+        /data/git/abseilcpp.git
+        master
+    )
+    FetchAndPopulate(
+        simdjson
+        /data/git/simdjson.git
+        master
+    )
+    FetchAndPopulate(
+        spdlog
+        /data/git/spdlog.git
+        master
+    )
+    FetchAndPopulate(
+        tensorflow
+        /data/git/tensorflow.git
+        master
+    )
+    FetchAndPopulate(
+        openpose
+        /data/git/openpose.git
+        master
+    )
+    FetchAndPopulate(
+        protobuf
+        /data/git/protobuf.git
+        master
+    )
+    FetchAndPopulate(
+        opencv
+        /data/git/opencv.git
+        master
+    )
+
+    FetchAndPopulate(
+        cppalgorithms
+        /data/git/cppalgorithms.git
+        master
+    )
+
+    FetchAndPopulate(
+        jemalloc
+        /data/git/jemalloc.git
+        master
+    )
+
+endif()
+
+# Needs to be set in (semi)dependency order
+if(BUILD_RAPIDJSON)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/rapidjson)
+endif()
+if(BUILD_FASTCPPCSVPARSER)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/fastcppcsvparser)
+endif()
+
+if(BUILD_BOOST)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/boost)
+endif()
+
+if(BUILD_OPENBLAS)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/openblas)
+endif()
+
+if(BUILD_LAPACK)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/lapack)
+endif()
+
+#include(debuglog)
+
+# End Code
 
 
+### NOTES / COMMENTS
 
 # for calling internal project with the external commands:
 

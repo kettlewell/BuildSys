@@ -2,7 +2,8 @@
 
 project( rapidjson )
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+#list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+include(enter)
 
 include(ExternalProject)
 
@@ -26,4 +27,5 @@ ExternalProject_Add(${EP_rapidjson}
         -DRAPIDJSON_HAS_STDSTRING:BOOL=OFF
 )
 
-include(debuglog)
+#include(debuglog)
+include(exit)

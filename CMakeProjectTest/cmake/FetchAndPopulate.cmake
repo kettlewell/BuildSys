@@ -15,10 +15,10 @@
 #                       develop
 #                       )
 #
-
 include(FetchContent)
 
 macro(FetchAndPopulate NAME REPO TAG)
+    message( STATUS "   Fetching " ${NAME} )
     set(GITNAME ${NAME}_git)
     FetchContent_Declare(
         ${GITNAME}
