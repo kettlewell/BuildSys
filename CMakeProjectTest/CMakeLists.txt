@@ -12,6 +12,16 @@ project(buildsys)
 # Add the project cmake path
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
+set(BUILDSYS_CONFIG "BuildSys_config.cmake" CACHE PATH "BuildSys Configuration File - relative to CMAKE_SOURCE_DIR")
+set(BUILDSYS_CONFIG ${CMAKE_SOURCE_DIR}/${BUILDSYS_CONFIG})
+
+if(EXISTS ${BUILDSYS_CONFIG})
+    include(${BUILDSYS_CONFIG})
+else()
+    message(FATAL_ERROR "CONFIG FILE NOT FOUND: ${BUILDSYS_CONFIG}")
+endif()
+
+message(STATUS "BUILD_RAPIDJSON:  ${BUILD_RAPIDJSON}")
 # cmakepp is a cmake library of "things"
 # TODO: make use of these functions
 #include(installcmakepp)
@@ -25,11 +35,16 @@ set(CMAKE_BUILD_TYPE         "${CONFIG_BUILD_TYPE}"  )
 set(CMAKE_VERBOSE_MAKEFILE   OFF                    CACHE BOOL "CMAKE_VERBOSE_MAKEFILE")
 set(DEBUG_OUTPUT             OFF                    CACHE BOOL "Enable Disable Debug output")
 
-set(BUILD_RAPIDJSON          OFF                    CACHE BOOL "BUILD_RAPIDJSON")
+#set(BUILD_RAPIDJSON          OFF                    CACHE BOOL "BUILD_RAPIDJSON")
 set(BUILD_FASTCPPCSVPARSER   OFF                    CACHE BOOL "BUILD_FASTCPPCSVPARSER")
 set(BUILD_LAPACK             OFF                    CACHE BOOL "BUILD_LAPACK")
 set(BUILD_BOOST              OFF                    CACHE BOOL "BUILD_BOOST")
 set(BUILD_OPENBLAS           OFF                    CACHE BOOL "BUILD_OPENBLAS")
+set(BUILD_ARMADILLO          OFF                    CACHE BOOL "BUILD_ARMADILLO")
+set(BUILD_DATAFRAME          OFF                    CACHE BOOL "BUILD_DATAFRAME")
+set(BUILD_EIGEN              OFF                    CACHE BOOL "BUILD_EIGEN")
+set(BUILD_CERES              OFF                    CACHE BOOL "BUILD_CERES")
+
 
 include(debuglog)
 
@@ -50,12 +65,24 @@ endif()
 include(FetchAndPopulate)
 
 
-# Force Set Dependencies
+# Create Pseudo Dependency Tree
+#
+if(BUILD_ARMADILLO)
+    set(BUILD_OPENBLAS ON)
+    set(BUILD_LAPACK ON)
+endif()
+
 if(BUILD_OPENBLAS)
     set(BUILD_BOOST ON)
 endif()
 
+if(BUILD_CERES)
+    set(BUILD_EIGEN ON)
+endif()
+###
 
+# Fetch the files and stage them
+#
 if(BUILD_RAPIDJSON)
 
     FetchAndPopulate(
@@ -98,17 +125,46 @@ if(BUILD_FASTCPPCSVPARSER)
     )
 endif()
 
+if(BUILD_ARMADILLO)
+    FetchAndPopulate(
+        armadillo
+        /data/git/armadillo.git
+        9.900.x
+    )
+endif()
+
+if(BUILD_DATAFRAME)
+    FetchAndPopulate(
+        dataframe
+        /data/git/dataframe.git
+        master
+    )
+endif()
+
+if(BUILD_EIGEN)
+FetchAndPopulate(
+        eigen
+        /data/git/eigen.git
+        3.3.7
+    )
+endif()
+
+
+if(BUILD_CERES)
+    FetchAndPopulate(
+        ceres
+        /data/git/ceres.git
+        master
+    )
+endif()
+
 if(BOOGYMAN)
     FetchAndPopulate(
         mp
         /data/git/mp.git
         master
     )
-    FetchAndPopulate(
-        armadillo
-        /data/git/armadillo.git
-        9.900.x
-    )
+
 
     FetchAndPopulate(
         openmpi
@@ -120,11 +176,7 @@ if(BOOGYMAN)
         /data/git/blaze.git
         master
     )
-    FetchAndPopulate(
-        dataframe
-        /data/git/dataframe.git
-        master
-    )
+    
 
 
     FetchAndPopulate(
@@ -133,17 +185,9 @@ if(BOOGYMAN)
         master
     )
 
-    FetchAndPopulate(
-        eigen
-        /data/git/eigen.git
-        3.3.7
-    )
+    
 
-    FetchAndPopulate(
-        ceres
-        /data/git/ceres.git
-        master
-    )
+    
 
     FetchAndPopulate(
         ensmallen
@@ -293,11 +337,15 @@ if(BOOGYMAN)
     )
 
 endif()
+# End Fetching / Staging 
+
+# Build External Projects
 
 # Needs to be set in (semi)dependency order
-if(BUILD_RAPIDJSON)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/external/rapidjson)
+if(BUILD_RAPIDJSON)    
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/rapidjson) 
 endif()
+
 if(BUILD_FASTCPPCSVPARSER)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/fastcppcsvparser)
 endif()
@@ -312,6 +360,23 @@ endif()
 
 if(BUILD_LAPACK)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/lapack)
+endif()
+
+if(BUILD_ARMADILLO)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/armadillo)
+endif()
+
+if(BUILD_DATAFRAME)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/dataframe)
+endif()
+
+if(BUILD_EIGEN)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/eigen)
+endif()
+
+
+if(BUILD_CERES)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/ceres)
 endif()
 
 #include(debuglog)
