@@ -18,6 +18,79 @@ set(BUILD_CERES                       OFF           CACHE BOOL   "BUILD_CERES")
 set(BUILD_OPENMPI                     OFF           CACHE BOOL   "BUILD_OPENMPI")
 set(BUILD_BLAZE                       OFF           CACHE BOOL   "BUILD_BLAZE")
 
+# TODO
+set(BUILD_JEMALLOC                    ON            CACHE BOOL   "BUILD_JEMALLOC")
+
+set(BUILD_NLOHMANNJSON                OFF           CACHE BOOL   "BUILD_NLOHMANNJSON")
+
+# make build generator
+set(BUILD_PROTOBUF                    OFF           CACHE BOOL   "BUILD_PROTOBUF")
+
+# requires boost, but didn't use my version of boost?
+set(BUILD_SHARK                       OFF           CACHE BOOL   "BUILD_SHARK")
+
+# requires eigen3
+set(BUILD_SHOGUN                      OFF           CACHE BOOL   "BUILD_SHOGUN")
+
+set(BUILD_OPENCV                      OFF           CACHE BOOL   "BUILD_OPENCV")
+
+# requires armadillo
+set(BUILD_ENSMALLEN                   OFF           CACHE BOOL   "BUILD_ENSMALLEN")
+
+# autoconf
+set(BUILD_GSL                         OFF           CACHE BOOL   "BUILD_GSL")
+
+# requires boost
+set(BUILD_MLPACK                      OFF           CACHE BOOL   "BUILD_MLPACK")
+
+set(BUILD_SPDLOG                      OFF           CACHE BOOL   "BUILD_SPDLOG")
+set(BUILD_GLOG                        OFF           CACHE BOOL   "BUILD_GLOG")
+
+# rtools build tool
+set(BUILD_RCPP                        OFF           CACHE BOOL   "BUILD_RCPP")
+set(BUILD_RINSIDE                     OFF           CACHE BOOL   "BUILD_RINSIDE")
+
+set(BUILD_SIMDJSON                    OFF           CACHE BOOL   "BUILD_SIMDJSON")
+set(BUILD_CPPALGORITHMS               OFF           CACHE BOOL   "BUILD_CPPALGORITHMS")
+set(BUILD_ABSEILCPP                   OFF           CACHE BOOL   "BUILD_ABSEILCPP")
+set(BUILD_OPENPOSE                    OFF           CACHE BOOL   "BUILD_OPENPOSE")
+set(BUILD_TENSORFLOW                  OFF           CACHE BOOL   "BUILD_TENSORFLOW")
+set(BUILD_CPPHTTPLIB                  OFF           CACHE BOOL   "BUILD_CPPHTTPLIB")
+
+# build issues - ninja cmake instructions
+set(BUILD_NEOML                       OFF           CACHE BOOL   "BUILD_NEOML")
+
+# Build Issue
+set(BUILD_MP                          OFF           CACHE BOOL   "BUILD_MP")
+
+# Requires X11 / cuda ?
+set(BUILD_DLIB                        OFF           CACHE BOOL   "BUILD_DLIB")
+
+#Build Issue
+set(BUILD_METATOOLKIT                 OFF           CACHE BOOL   "BUILD_METATOOLKIT")
+
+set(BUILD_NLOPT                       OFF           CACHE BOOL   "BUILD_NLOPT")
+
+# Build Issue
+set(BUILD_UNIVERSAL                   OFF           CACHE BOOL   "BUILD_UNIVERSAL")
+
+# Builds
+set(BUILD_VC                          OFF           CACHE BOOL   "BUILD_VC")
+
+# requires boost
+set(BUILD_VOWPALWABBIT                OFF           CACHE BOOL   "BUILD_VOWPALWABBIT")
+
+# build issues
+set(BUILD_XTENSOR                     OFF           CACHE BOOL   "BUILD_XTENSOR")
+
+# requires x11
+set(BUILD_ROOT                        OFF           CACHE BOOL   "BUILD_ROOT")
+set(BUILD_BAT                         OFF           CACHE BOOL   "BUILD_BAT")
+
+set(BUILD_XGBOOST                     OFF           CACHE BOOL   "BUILD_XGBOOST")
+
+
+
 
 ## LIBRARY DEFINITIONS
 # RapidJson
