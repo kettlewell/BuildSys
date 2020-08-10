@@ -27,23 +27,10 @@ message(STATUS "BUILD_RAPIDJSON:  ${BUILD_RAPIDJSON}")
 #include(installcmakepp)
 
 # TODO: Cleanup this variable mess ... 
-set(CONFIG_BUILD_TYPE        "Release"              CACHE STRING "CONFIG_BUILD_TYPE"    )
-set(INSTALL_BASE             "/data/opt"            CACHE PATH "INSTALL BASE"         )
+
 set(CMAKE_FIND_ROOT_PATH     "${INSTALL_BASE}"       )
 set(CMAKE_INSTALL_PREFIX     "${INSTALL_BASE}"       )
 set(CMAKE_BUILD_TYPE         "${CONFIG_BUILD_TYPE}"  )
-set(CMAKE_VERBOSE_MAKEFILE   OFF                    CACHE BOOL "CMAKE_VERBOSE_MAKEFILE")
-set(DEBUG_OUTPUT             OFF                    CACHE BOOL "Enable Disable Debug output")
-
-#set(BUILD_RAPIDJSON          OFF                    CACHE BOOL "BUILD_RAPIDJSON")
-set(BUILD_FASTCPPCSVPARSER   OFF                    CACHE BOOL "BUILD_FASTCPPCSVPARSER")
-set(BUILD_LAPACK             OFF                    CACHE BOOL "BUILD_LAPACK")
-set(BUILD_BOOST              OFF                    CACHE BOOL "BUILD_BOOST")
-set(BUILD_OPENBLAS           OFF                    CACHE BOOL "BUILD_OPENBLAS")
-set(BUILD_ARMADILLO          OFF                    CACHE BOOL "BUILD_ARMADILLO")
-set(BUILD_DATAFRAME          OFF                    CACHE BOOL "BUILD_DATAFRAME")
-set(BUILD_EIGEN              OFF                    CACHE BOOL "BUILD_EIGEN")
-set(BUILD_CERES              OFF                    CACHE BOOL "BUILD_CERES")
 
 
 include(debuglog)
@@ -67,18 +54,31 @@ include(FetchAndPopulate)
 
 # Create Pseudo Dependency Tree
 #
-if(BUILD_ARMADILLO)
-    set(BUILD_OPENBLAS ON)
-    set(BUILD_LAPACK ON)
-endif()
 
-if(BUILD_OPENBLAS)
-    set(BUILD_BOOST ON)
+if(BUILD_ARMADILLO)
+    set(BUILD_LAPACK   ON)
 endif()
 
 if(BUILD_CERES)
-    set(BUILD_EIGEN ON)
+    set(BUILD_EIGEN    ON)
+    set(BUILD_LAPACK   ON)
 endif()
+
+if(BUILD_BLAZE)
+    set(BUILD_LAPACK   ON)
+endif()
+
+if(BUILD_LAPACK)
+    set(BUILD_OPENBLAS ON)
+endif()
+
+if(BUILD_OPENBLAS)
+    set(BUILD_BOOST    ON)
+    set(BUILD_OPENMPI  ON)
+endif()
+
+
+
 ###
 
 # Fetch the files and stage them
@@ -142,18 +142,33 @@ if(BUILD_DATAFRAME)
 endif()
 
 if(BUILD_EIGEN)
-FetchAndPopulate(
+    FetchAndPopulate(
         eigen
         /data/git/eigen.git
         3.3.7
     )
 endif()
 
-
 if(BUILD_CERES)
     FetchAndPopulate(
         ceres
         /data/git/ceres.git
+        master
+    )
+endif()
+
+if(BUILD_OPENMPI)
+    FetchAndPopulate(
+        openmpi
+        /data/git/openmpi.git
+        master
+    )
+endif()
+
+if(BUILD_BLAZE)
+    FetchAndPopulate(
+        blaze
+        /data/git/blaze.git
         master
     )
 endif()
@@ -165,29 +180,11 @@ if(BOOGYMAN)
         master
     )
 
-
-    FetchAndPopulate(
-        openmpi
-        /data/git/openmpi.git
-        master
-    )
-    FetchAndPopulate(
-        blaze
-        /data/git/blaze.git
-        master
-    )
-    
-
-
     FetchAndPopulate(
         dlib
         /data/git/dlib.git
         master
     )
-
-    
-
-    
 
     FetchAndPopulate(
         ensmallen
@@ -354,6 +351,10 @@ if(BUILD_BOOST)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/boost)
 endif()
 
+if(BUILD_OPENMPI)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/openmpi)
+endif()
+
 if(BUILD_OPENBLAS)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/openblas)
 endif()
@@ -374,9 +375,12 @@ if(BUILD_EIGEN)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/eigen)
 endif()
 
-
 if(BUILD_CERES)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/ceres)
+endif()
+
+if(BUILD_BLAZE)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/blaze)
 endif()
 
 #include(debuglog)
