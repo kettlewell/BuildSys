@@ -391,6 +391,11 @@ endif()
 # Build External Projects
 
 # Needs to be set in (semi)dependency order
+
+if(BUILD_JEMALLOC)    
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/jemalloc) 
+endif()
+
 if(BUILD_RAPIDJSON)    
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/rapidjson) 
 endif()

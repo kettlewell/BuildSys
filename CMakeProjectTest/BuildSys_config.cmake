@@ -17,9 +17,11 @@ set(BUILD_EIGEN                       OFF           CACHE BOOL   "BUILD_EIGEN")
 set(BUILD_CERES                       OFF           CACHE BOOL   "BUILD_CERES")
 set(BUILD_OPENMPI                     OFF           CACHE BOOL   "BUILD_OPENMPI")
 set(BUILD_BLAZE                       OFF           CACHE BOOL   "BUILD_BLAZE")
+set(BUILD_JEMALLOC                    OFF           CACHE BOOL   "BUILD_JEMALLOC")
+
+
 
 # TODO
-set(BUILD_JEMALLOC                    ON            CACHE BOOL   "BUILD_JEMALLOC")
 
 set(BUILD_NLOHMANNJSON                OFF           CACHE BOOL   "BUILD_NLOHMANNJSON")
 

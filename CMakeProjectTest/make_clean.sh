@@ -24,7 +24,7 @@ CMAKE_BUILD_ARGS="${VERBOSE} ${JOBS}"
 GMAKE_BUILD_ARGS=""
 
 # Super Clean
-#rm -rf /data/opt/*           &&
+rm -rf /data/opt/*           &&
 
 # Very Clean
 rm -rf build/              &&
