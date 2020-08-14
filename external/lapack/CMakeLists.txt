@@ -11,7 +11,9 @@ set(EP_lapack "lapack_git")
 ExternalProject_Add(${EP_lapack}
     PREFIX ${EP_lapack}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    SOURCE_DIR ${${EP_lapack}_SOURCE_DIR}  # Provided by FetchContent
+    # SOURCE_DIR ${${EP_lapack}_SOURCE_DIR}  # Provided by FetchContent
+    GIT_REPOSITORY /data/git/lapack.git
+    GIT_TAG  v3.9.0
     CMAKE_CACHE_DEFAULT_ARGS
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>

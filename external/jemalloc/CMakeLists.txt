@@ -20,7 +20,9 @@ set(EP_jemalloc "jemalloc_git")
 ExternalProject_Add(${EP_jemalloc}
     PREFIX ${EP_jemalloc}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    SOURCE_DIR ${${EP_jemalloc}_SOURCE_DIR}  # Provided by FetchContent
+    #SOURCE_DIR ${${EP_jemalloc}_SOURCE_DIR}  # Provided by FetchContent
+    GIT_REPOSITORY /data/git/jemalloc.git
+    GIT_TAG  master
     BUILD_IN_SOURCE 1
     PATCH_COMMAND  ""
     CONFIGURE_COMMAND <SOURCE_DIR>/autogen.sh 

@@ -11,27 +11,22 @@ set(BUILD_FASTCPPCSVPARSER            OFF           CACHE BOOL   "BUILD_FASTCPPC
 set(BUILD_LAPACK                      OFF           CACHE BOOL   "BUILD_LAPACK")
 set(BUILD_BOOST                       OFF           CACHE BOOL   "BUILD_BOOST")
 set(BUILD_OPENBLAS                    OFF           CACHE BOOL   "BUILD_OPENBLAS")
-set(BUILD_ARMADILLO                   OFF           CACHE BOOL   "BUILD_ARMADILLO")
+set(BUILD_ARMADILLO                   ON           CACHE BOOL   "BUILD_ARMADILLO")
 set(BUILD_DATAFRAME                   OFF           CACHE BOOL   "BUILD_DATAFRAME")
 set(BUILD_EIGEN                       OFF           CACHE BOOL   "BUILD_EIGEN")
 set(BUILD_CERES                       OFF           CACHE BOOL   "BUILD_CERES")
 set(BUILD_OPENMPI                     OFF           CACHE BOOL   "BUILD_OPENMPI")
 set(BUILD_BLAZE                       OFF           CACHE BOOL   "BUILD_BLAZE")
 set(BUILD_JEMALLOC                    OFF           CACHE BOOL   "BUILD_JEMALLOC")
-
-
+set(BUILD_NLOHMANNJSON                OFF            CACHE BOOL   "BUILD_NLOHMANNJSON")
+set(BUILD_PROTOBUF                    OFF           CACHE BOOL   "BUILD_PROTOBUF")
 
 # TODO
-
-set(BUILD_NLOHMANNJSON                OFF           CACHE BOOL   "BUILD_NLOHMANNJSON")
-
-# make build generator
-set(BUILD_PROTOBUF                    OFF           CACHE BOOL   "BUILD_PROTOBUF")
 
 # requires boost, but didn't use my version of boost?
 set(BUILD_SHARK                       OFF           CACHE BOOL   "BUILD_SHARK")
 
-# requires eigen3
+# requires eigen3... missing other libs too
 set(BUILD_SHOGUN                      OFF           CACHE BOOL   "BUILD_SHOGUN")
 
 set(BUILD_OPENCV                      OFF           CACHE BOOL   "BUILD_OPENCV")

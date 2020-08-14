@@ -11,7 +11,9 @@ set(EP_armadillo "armadillo_git")
 ExternalProject_Add(${EP_armadillo}
     PREFIX ${EP_armadillo}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    SOURCE_DIR ${${EP_armadillo}_SOURCE_DIR}  # Provided by FetchContent
+    # SOURCE_DIR ${${EP_armadillo}_SOURCE_DIR}  # Provided by FetchContent
+    GIT_REPOSITORY /data/git/armadillo.git
+    GIT_TAG  9.900.x
     CMAKE_CACHE_DEFAULT_ARGS
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
         -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>

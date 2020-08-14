@@ -5,7 +5,7 @@
 #      ... or a better single script with options
 #
 
-cd /data/git/BuildSys/CMakeProjectTest
+cd /data/git/BuildSys/
 
 #rm -rf build ; cmake3 -S . -B build && cmake3 --build build -j20
 #cmake3 -S . -B build -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON && cmake3 --build build -j20
@@ -23,11 +23,11 @@ CMAKE_BUILD_ARGS="${VERBOSE} ${JOBS}"
 #GMAKE_BUILD_ARGS="-- --no-print-directory"
 GMAKE_BUILD_ARGS=""
 
-# Super Clean
-rm -rf /data/opt/*           &&
+# Remove
+rm -rf /data/opt/*           
 
 # Very Clean
-rm -rf build/              &&
+# rm -rf build/              
 
 # Clean
 rm -rf build/CMake*        &&

@@ -4,9 +4,11 @@ cmake_minimum_required(VERSION 3.14)
 project(buildsys)
 
 # TODO: 
-#       remove policy deprecation warnings
-#       enhance messages... still unclear on a few items.
-#       create entrance and exit messages
+#       * remove policy deprecation warnings  ( which ones? I don't see them now )
+#       * enhance messages... still unclear on a few items. ( Done ? )
+#       * move Fetch and add_subdirectory projects into user configurable
+#             files, same as the BuildSys_config.cmake overridable file.
+
 
 
 # Add the project cmake path
@@ -21,12 +23,12 @@ else()
     message(FATAL_ERROR "CONFIG FILE NOT FOUND: ${BUILDSYS_CONFIG}")
 endif()
 
-message(STATUS "BUILD_RAPIDJSON:  ${BUILD_RAPIDJSON}")
-# cmakepp is a cmake library of "things"
-# TODO: make use of these functions
-#include(installcmakepp)
 
-# TODO: Cleanup this variable mess ... 
+
+# TODO: cmakepp is a cmake library of "things"
+# include(installcmakepp)
+
+# TODO: Cleanup this variable mess ... ( Done ?)
 
 set(CMAKE_FIND_ROOT_PATH     "${INSTALL_BASE}"       )
 set(CMAKE_INSTALL_PREFIX     "${INSTALL_BASE}"       )
@@ -34,6 +36,9 @@ set(CMAKE_BUILD_TYPE         "${CONFIG_BUILD_TYPE}"  )
 
 
 include(debuglog)
+
+# TODO: Remove global compiler options ... not sure where I found this from, 
+#       But I don't think this is what I want.
 
 # Globally Set Compiler Options for c++11
 include(CheckCXXCompilerFlag)
@@ -49,11 +54,22 @@ else()
     message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-include(FetchAndPopulate)
-
 
 # Create Pseudo Dependency Tree
-#
+# This isn't strictly necessary, but a convenience to me
+# so that it will auto build any dependent libs for me
+
+if(BUILD_SHARK)
+    set(BUILD_OPENBLAS  ON)
+endif()
+
+if(BUILD_SHOGUN)
+    set(BUILD_EIGEN     ON)
+endif()
+
+if(BUILD_ENSMALLEN)
+    set(BUILD_ARMADILLO ON)
+endif()
 
 if(BUILD_ARMADILLO)
     set(BUILD_LAPACK   ON)
@@ -61,10 +77,13 @@ endif()
 
 if(BUILD_CERES)
     set(BUILD_EIGEN    ON)
-    set(BUILD_LAPACK   ON)
 endif()
 
 if(BUILD_BLAZE)
+    set(BUILD_LAPACK   ON)
+endif()
+
+if(BUILD_EIGEN)
     set(BUILD_LAPACK   ON)
 endif()
 
@@ -74,328 +93,23 @@ endif()
 
 if(BUILD_OPENBLAS)
     set(BUILD_BOOST    ON)
-    set(BUILD_OPENMPI  ON)
-endif()
-
-
-
-###
-
-# Fetch the files and stage them
-#
-if(BUILD_RAPIDJSON)
-
-    FetchAndPopulate(
-        rapidjson
-        /data/git/rapidjson.git
-        master
-    )
-endif()
-
-if(BUILD_LAPACK)
-
-    FetchAndPopulate(
-        lapack
-        /data/git/lapack.git
-        v3.9.0
-    )
 endif()
 
 if(BUILD_BOOST)
-    FetchAndPopulate(
-        boost
-        /data/git/boost.git
-        boost-1.73.0
-    )
+    set(BUILD_OPENMPI  ON)
 endif()
 
-if(BUILD_OPENBLAS)
-    FetchAndPopulate(
-        openblas
-        /data/git/OpenBLAS.git
-        develop
-    )
-endif()
+###
 
-if(BUILD_FASTCPPCSVPARSER)
-    FetchAndPopulate(
-        fastcppcsvparser
-        /data/git/fastcppcsvparser.git
-        master
-    )
-endif()
+include(FetchAndPopulate)
 
-if(BUILD_ARMADILLO)
-    FetchAndPopulate(
-        armadillo
-        /data/git/armadillo.git
-        9.900.x
-    )
-endif()
-
-if(BUILD_DATAFRAME)
-    FetchAndPopulate(
-        dataframe
-        /data/git/dataframe.git
-        master
-    )
-endif()
-
-if(BUILD_EIGEN)
-    FetchAndPopulate(
-        eigen
-        /data/git/eigen.git
-        3.3.7
-    )
-endif()
-
-if(BUILD_CERES)
-    FetchAndPopulate(
-        ceres
-        /data/git/ceres.git
-        master
-    )
-endif()
-
-if(BUILD_OPENMPI)
-    FetchAndPopulate(
-        openmpi
-        /data/git/openmpi.git
-        master
-    )
-endif()
-
-if(BUILD_BLAZE)
-    FetchAndPopulate(
-        blaze
-        /data/git/blaze.git
-        master
-    )
-endif()
-
-if(BUILD_MP)
-    FetchAndPopulate(
-        mp
-        /data/git/mp.git
-        master
-    )
-endif()
-
-if(BUILD_DLIB)
-    FetchAndPopulate(
-        dlib
-        /data/git/dlib.git
-        master
-    )
-endif()
-
-if(BUILD_ENSMALLEN)
-    FetchAndPopulate(
-        ensmallen
-        /data/git/ensmallen.git
-        master
-    )
-endif()
-if(BUILD_GSL)
-    FetchAndPopulate(
-        gsl
-        /data/git/gsl.git
-        master
-    )
-endif()
-
-if(BUILD_METATOOLKIT)
-    FetchAndPopulate(
-        metatoolkit
-        /data/git/metatoolkit.git
-        master
-    )
-endif()
-if(BUILD_MLPACK)
-    FetchAndPopulate(
-        mlpack
-        /data/git/mlpack.git
-        master
-    )
-endif()
-if(BUILD_NLOHMANNJSON)
-    FetchAndPopulate(
-        nlohmannjson
-        /data/git/nlohmannjson.git
-        master
-    )
-endif()
-if(BUILD_NLOPT)
-    FetchAndPopulate(
-        nlopt
-        /data/git/nlopt.git
-        master
-    )
-endif()
-if(BUILD_RCPP)
-    FetchAndPopulate(
-        rcpp
-        /data/git/rcpp.git
-        master
-    )
-endif()
-if(BUILD_RINSIDE)
-    FetchAndPopulate(
-        rinside
-        /data/git/rinside.git
-        master
-    )
-endif()
-if(BUILD_SHARK)
-    FetchAndPopulate(
-        shark
-        /data/git/shark.git
-        master
-    )
-endif()
-if(BUILD_SHOGUN)
-    FetchAndPopulate(
-        shogun
-        /data/git/shogun.git
-        master
-    )
-endif()
-if(BUILD_UNIVERSAL)
-    FetchAndPopulate(
-        universal
-        /data/git/universal.git
-        master
-    )
-endif()
-if(BUILD_VC)
-    FetchAndPopulate(
-        vc
-        /data/git/vc.git
-        master
-    )
-endif()
-if(BUILD_VOWPALWABBIT)
-    FetchAndPopulate(
-        vowpalwabbit
-        /data/git/vowpalwabbit.git
-        master
-    )
-endif()
-if(BUILD_XTENSOR)
-    FetchAndPopulate(
-        xtensor
-        /data/git/xtensor.git
-        master
-    )
-endif()
-if(BUILD_ROOT)
-    FetchAndPopulate(
-        root
-        /data/git/root.git
-        master
-    )
-endif()
-if(BUILD_CPPHTTPLIB)
-    FetchAndPopulate(
-        cpphttplib
-        /data/git/cpphttplib.git
-        master
-    )
-endif()
-if(BUILD_NEOML)
-    FetchAndPopulate(
-        neoml
-        /data/git/neoml.git
-        master
-    )
-endif()
-if(BUILD_XGBOOST)
-    FetchAndPopulate(
-        xgboost
-        /data/git/xgboost.git
-        master
-    )
-endif()
-if(BUILD_GLOG)
-    FetchAndPopulate(
-        glog
-        /data/git/glog.git
-        master
-    )
-endif()
-if(BUILD_ABSEILCPP)
-    FetchAndPopulate(
-        abseilcpp
-        /data/git/abseilcpp.git
-        master
-    )
-endif()
-if(BUILD_SIMDJSON)
-    FetchAndPopulate(
-        simdjson
-        /data/git/simdjson.git
-        master
-    )
-endif()
-if(BUILD_SPDLOG)
-    FetchAndPopulate(
-        spdlog
-        /data/git/spdlog.git
-        master
-    )
-endif()
-if(BUILD_TENSORFLOW)
-    FetchAndPopulate(
-        tensorflow
-        /data/git/tensorflow.git
-        master
-    )
-endif()
-if(BUILD_OPENPOSE)
-    FetchAndPopulate(
-        openpose
-        /data/git/openpose.git
-        master
-    )
-endif()
-if(BUILD_PROTOBUF)
-    FetchAndPopulate(
-        protobuf
-        /data/git/protobuf.git
-        master
-    )
-endif()
-if(BUILD_OPENCV)
-    FetchAndPopulate(
-        opencv
-        /data/git/opencv.git
-        master
-    )
-endif()
-if(BUILD_CPPALGORITHMS)
-    FetchAndPopulate(
-        cppalgorithms
-        /data/git/cppalgorithms.git
-        master
-    )
-endif()
-if(BUILD_JEMALLOC)
-    FetchAndPopulate(
-        jemalloc
-        /data/git/jemalloc.git
-        master
-    )
-endif()
-# End Fetching / Staging 
-
-# Build External Projects
+# TODO: Move Fetching & External Projects to overridable file.
+# # Fetch the files and stage them Build External Projects
 
 # Needs to be set in (semi)dependency order
+# Not a fan of multiple dependency trees, but... it is what it is.
 
-if(BUILD_JEMALLOC)    
-    add_subdirectory(${CMAKE_SOURCE_DIR}/external/jemalloc) 
-endif()
-
+# No Dependencies
 if(BUILD_RAPIDJSON)    
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/rapidjson) 
 endif()
@@ -404,21 +118,38 @@ if(BUILD_FASTCPPCSVPARSER)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/fastcppcsvparser)
 endif()
 
-if(BUILD_BOOST)
-    add_subdirectory(${CMAKE_SOURCE_DIR}/external/boost)
+if(BUILD_NLOHMANNJSON)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/nlohmannjson)
 endif()
+
+#####################
+
+if(BUILD_JEMALLOC)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/jemalloc) 
+endif()
+
 
 if(BUILD_OPENMPI)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/openmpi)
+endif()
+
+if(BUILD_BOOST)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/boost)
 endif()
 
 if(BUILD_OPENBLAS)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/openblas)
 endif()
 
+if(BUILD_SHARK)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/shark)
+endif()
+
+
 if(BUILD_LAPACK)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/lapack)
 endif()
+
 
 if(BUILD_ARMADILLO)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/armadillo)
@@ -439,6 +170,119 @@ endif()
 if(BUILD_BLAZE)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/blaze)
 endif()
+
+if(BUILD_PROTOBUF)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/protobuf)
+endif()
+
+if(BUILD_SHOGUN)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/shogun)
+endif()
+
+if(BUILD_OPENCV)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/opencv)
+endif()
+
+if(BUILD_ENSMALLEN)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/ensmallen)
+endif()
+
+if(BUILD_GSL)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/gsl)
+endif()
+
+if(BUILD_MLPACK)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/mlpack)
+endif()
+
+if(BUILD_SPDLOG)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/spdlog)
+endif()
+
+if(BUILD_GLOG)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/glog)
+endif()
+
+if(BUILD_RCPP)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/rcpp)
+endif()
+
+if(BUILD_RINSIDE)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/rinside)
+endif()
+
+if(BUILD_SIMDJSON)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/simdjson)
+endif()
+
+if(BUILD_CPPALGORITHMS)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/cppalgorithms)
+endif()
+
+if(BUILD_ABSEILCPP)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/abseilcpp)
+endif()
+
+if(BUILD_OPENPOSE)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/openpose)
+endif()
+
+if(BUILD_TENSORFLOW)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/tensorflow)
+endif()
+
+if(BUILD_CPPHTTPLIB)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/cpphttplib)
+endif()
+
+if(BUILD_NEOML)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/neoml)
+endif()
+
+if(BUILD_MP)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/mp)
+endif()
+
+if(BUILD_DLIB)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/dlib)
+endif()
+
+if(BUILD_METATOOLKIT)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/metatoolkit)
+endif()
+
+if(BUILD_NLOPT)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/nlopt)
+endif()
+
+if(BUILD_UNIVERSAL)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/universal)
+endif()
+
+if(BUILD_VC)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/vc)
+endif()
+
+if(BUILD_VOWPALWABBIT)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/vowpalwabbit)
+endif()
+
+if(BUILD_XTENSOR)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/xtensor)
+endif()
+
+if(BUILD_ROOT)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/ROOT)
+endif()
+
+if(BUILD_BAT)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/bat)
+endif()
+
+if(BUILD_XGBOOST)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/xgboost)
+endif()
+
 
 #include(debuglog)
 

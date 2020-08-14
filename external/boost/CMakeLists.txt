@@ -25,12 +25,23 @@ include(enter)
 
 set(BUILD_BITS 64 CACHE STRING "Build for 64 (default) or 32 bit.")
 
+
+  #--with-system
+  #--with-log
+  #--with-serialization
+  #--with-thread
+  #--with-test
+  #--with-timer
+  #--with-regex
+  #--with-random
+  
 set(_B2_FLAGS -d3 --prefix=<INSTALL_DIR>
-  --with-system
-  --with-log
+  --without-python
+  --without-graph_parallel
+  --without-wave
   --layout=system
   address-model=${BUILD_BITS}
-  link=static
+  link=shared
   threading=multi
 )
 
@@ -55,7 +66,9 @@ include(ExternalProject)
 ExternalProject_Add(${EP_boost}
     PREFIX boost_git
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    SOURCE_DIR ${boost_git_SOURCE_DIR}  # Provided by FetchContent
+    #SOURCE_DIR ${boost_git_SOURCE_DIR}  # Provided by FetchContent
+    GIT_REPOSITORY /data/git/boost.git
+    GIT_TAG  boost-1.73.0
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ${_BOOTSTRAP_COMMAND}
     BUILD_COMMAND ${_B2_COMMAND} ${_B2_FLAGS}
@@ -65,6 +78,7 @@ ExternalProject_Add(${EP_boost}
     LOG_CONFIGURE ON
     LOG_BUILD ON
     LOG_INSTALL ON
+    DEPENDS openmpi_git
 )
 
 ExternalProject_Get_Property( ${EP_boost} BUILD_COMMAND INSTALL_COMMAND INSTALL_DIR PREFIX SOURCE_DIR)

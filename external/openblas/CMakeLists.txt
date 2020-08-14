@@ -20,7 +20,9 @@ set(EP_openblas "openblas_git")
 ExternalProject_Add(${EP_openblas}
     PREFIX ${EP_openblas}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    SOURCE_DIR ${${EP_openblas}_SOURCE_DIR}  # Provided by FetchContent
+    # SOURCE_DIR ${${EP_openblas}_SOURCE_DIR}  # Provided by FetchContent
+    GIT_REPOSITORY /data/git/openblas.git
+    GIT_TAG  develop
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ${CMAKE_MAKE_PROGRAM}  USE_OPENMP=1 NO_LAPACK=1 NO_AFFINITY=0 MAKE_NB_JOBS=20 CPP_THREAD_SAFETY_TEST=0 -j${NPROCS} libs shared

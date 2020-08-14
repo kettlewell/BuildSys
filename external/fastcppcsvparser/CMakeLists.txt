@@ -10,7 +10,9 @@ set(EP_fastcppcsvparser "fastcppcsvparser_git")
 ExternalProject_Add(${EP_fastcppcsvparser}
     PREFIX ${EP_fastcppcsvparser}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    SOURCE_DIR ${${EP_fastcppcsvparser}_SOURCE_DIR}  # Provided by FetchContent
+    #SOURCE_DIR ${${EP_fastcppcsvparser}_SOURCE_DIR}  # Provided by FetchContent
+    GIT_REPOSITORY /data/git/fastcppcsvparser.git
+    GIT_TAG  master
     BUILD_IN_SOURCE 1
     PATCH_COMMAND mkdir -p <INSTALL_DIR>/include
     CONFIGURE_COMMAND ""
