@@ -78,7 +78,7 @@ ExternalProject_Add(${EP_boost}
     LOG_CONFIGURE ON
     LOG_BUILD ON
     LOG_INSTALL ON
-    DEPENDS openmpi_git
+    #DEPENDS openmpi_git
 )
 
 ExternalProject_Get_Property( ${EP_boost} BUILD_COMMAND INSTALL_COMMAND INSTALL_DIR PREFIX SOURCE_DIR)

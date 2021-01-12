@@ -1,5 +1,5 @@
 # Top Level CMAKE File
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.17)
 
 project(buildsys)
 
@@ -88,7 +88,7 @@ if(BUILD_EIGEN)
 endif()
 
 if(BUILD_LAPACK)
-    set(BUILD_OPENBLAS ON)
+    set(BUILD_OPENBLAS OFF)
 endif()
 
 if(BUILD_OPENBLAS)
@@ -96,12 +96,34 @@ if(BUILD_OPENBLAS)
 endif()
 
 if(BUILD_BOOST)
-    set(BUILD_OPENMPI  ON)
+    set(BUILD_OPENMPI  OFF)
+endif()
+
+if(BUILD_HELLO)
+    set(BUILD_LAPACK    ON)
+    set(BUILD_OPENBLAS  ON)
+    set(BUILD_BOOST     ON)
+    set(BUILD_RAPIDJSON ON)
 endif()
 
 ###
 
 include(FetchAndPopulate)
+
+if(BUILD_HELLO)
+
+    FetchContent_Declare(
+        hello
+        URL ${CMAKE_SOURCE_DIR}/hello
+    )
+
+    FetchContent_GetProperties(hello)
+
+    if(NOT hello_POPULATED)
+        FetchContent_Populate(hello)
+    endif()
+
+endif()
 
 # TODO: Move Fetching & External Projects to overridable file.
 # # Fetch the files and stage them Build External Projects
@@ -283,6 +305,9 @@ if(BUILD_XGBOOST)
     add_subdirectory(${CMAKE_SOURCE_DIR}/external/xgboost)
 endif()
 
+if(BUILD_HELLO)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/external/hello)
+endif()
 
 #include(debuglog)
 

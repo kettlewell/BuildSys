@@ -33,7 +33,7 @@ ExternalProject_Add(${EP_openblas}
     LOG_BUILD ON
     LOG_INSTALL ON
     WORKING_DIRECTORY <SOURCE_DIR>
-    DEPENDS openmpi_git
+   # DEPENDS openmpi_git
 )
 
 #include(debuglog)

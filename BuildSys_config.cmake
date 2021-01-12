@@ -6,19 +6,20 @@ set(CMAKE_VERBOSE_MAKEFILE            ON           CACHE BOOL   "CMAKE_VERBOSE_M
 set(DEBUG_OUTPUT                      ON           CACHE BOOL   "Enable Disable Debug output")
 
 # BUILD OFF/ON
+set(BUILD_HELLO                       ON            CACHE BOOL   "BUILD_HELLO")
 set(BUILD_RAPIDJSON                   OFF           CACHE BOOL   "BUILD_RAPIDJSON")
 set(BUILD_FASTCPPCSVPARSER            OFF           CACHE BOOL   "BUILD_FASTCPPCSVPARSER")
 set(BUILD_LAPACK                      OFF           CACHE BOOL   "BUILD_LAPACK")
 set(BUILD_BOOST                       OFF           CACHE BOOL   "BUILD_BOOST")
 set(BUILD_OPENBLAS                    OFF           CACHE BOOL   "BUILD_OPENBLAS")
-set(BUILD_ARMADILLO                   ON           CACHE BOOL   "BUILD_ARMADILLO")
+set(BUILD_ARMADILLO                   OFF           CACHE BOOL   "BUILD_ARMADILLO")
 set(BUILD_DATAFRAME                   OFF           CACHE BOOL   "BUILD_DATAFRAME")
 set(BUILD_EIGEN                       OFF           CACHE BOOL   "BUILD_EIGEN")
 set(BUILD_CERES                       OFF           CACHE BOOL   "BUILD_CERES")
 set(BUILD_OPENMPI                     OFF           CACHE BOOL   "BUILD_OPENMPI")
 set(BUILD_BLAZE                       OFF           CACHE BOOL   "BUILD_BLAZE")
 set(BUILD_JEMALLOC                    OFF           CACHE BOOL   "BUILD_JEMALLOC")
-set(BUILD_NLOHMANNJSON                OFF            CACHE BOOL   "BUILD_NLOHMANNJSON")
+set(BUILD_NLOHMANNJSON                OFF           CACHE BOOL   "BUILD_NLOHMANNJSON")
 set(BUILD_PROTOBUF                    OFF           CACHE BOOL   "BUILD_PROTOBUF")
 
 # TODO
